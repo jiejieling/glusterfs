@@ -411,8 +411,8 @@ test_h_getsetattrs(void)
         printf("glfs_h_getattrs and setattrs tests: FAILED\n");
         goto out;
     }
-    retsb.st_atim = timestamp;
-    retsb.st_mtim = timestamp;
+//    retsb.st_atim = timestamp;
+//    retsb.st_mtim = timestamp;
     valid = GFAPI_SET_ATTR_MODE | GFAPI_SET_ATTR_UID | GFAPI_SET_ATTR_GID |
             GFAPI_SET_ATTR_ATIME | GFAPI_SET_ATTR_MTIME;
     peek_stat(&retsb);
@@ -1558,81 +1558,81 @@ main(int argc, char *argv[])
     ret = glfs_init(fs);
 
     fprintf(stderr, "glfs_init: returned %d\n", ret);
-
-    sleep(2);
-
-    fs2 = glfs_new(argv[1]);
-    if (!fs2) {
-        fprintf(stderr, "glfs_new: returned NULL\n");
-        return 1;
-    }
-
-    //      ret = glfs_set_volfile (fs2, "/tmp/posix.vol");
-
-    ret = glfs_set_volfile_server(fs2, "tcp", argv[2], 24007);
-
-    ret = glfs_set_logging(fs2, "/dev/stderr", 7);
-
-    ret = glfs_init(fs2);
-
-    fprintf(stderr, "glfs_init: returned %d\n", ret);
-
-    ret = glfs_lstat(fs, filename, &sb);
-    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
-
-    fd = glfs_creat(fs, filename, O_RDWR, 0644);
-    fprintf(stderr, "%s: (%p) %s\n", filename, fd, strerror(errno));
-
-    fd2 = glfs_open(fs2, filename, O_RDWR);
-    fprintf(stderr, "%s: (%p) %s\n", filename, fd, strerror(errno));
-
-    sprintf(writebuf, "hi there\n");
-    ret = glfs_write(fd, writebuf, 32, 0);
-
-    glfs_lseek(fd2, 0, SEEK_SET);
-
-    ret = glfs_read(fd2, readbuf, 32, 0);
-
-    printf("read %d, %s", ret, readbuf);
-
-    glfs_close(fd);
-    glfs_close(fd2);
-
-    filename = "/filename3";
-    ret = glfs_mknod(fs, filename, S_IFIFO, 0);
-    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
-
-    ret = glfs_lstat(fs, filename, &sb);
-    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
-
-    ret = glfs_rename(fs, filename, "/filename4");
-    fprintf(stderr, "rename(%s): (%d) %s\n", filename, ret, strerror(errno));
-
-    ret = glfs_unlink(fs, "/filename4");
-    fprintf(stderr, "unlink(%s): (%d) %s\n", "/filename4", ret,
-            strerror(errno));
-
-    filename = "/dirname2";
-    ret = glfs_mkdir(fs, filename, 0);
-    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
-
-    ret = glfs_lstat(fs, filename, &sb);
-    fprintf(stderr, "lstat(%s): (%d) %s\n", filename, ret, strerror(errno));
-
-    ret = glfs_rmdir(fs, filename);
-    fprintf(stderr, "rmdir(%s): (%d) %s\n", filename, ret, strerror(errno));
-
-    test_dirops(fs);
-
-    test_xattr(fs);
-
-    test_chdir(fs);
-
-    test_handleops(argc, argv);
-    // done
-
-    glfs_fini(fs);
-    glfs_fini(fs2);
+//
+//    sleep(2);
+//
+//    fs2 = glfs_new(argv[1]);
+//    if (!fs2) {
+//        fprintf(stderr, "glfs_new: returned NULL\n");
+//        return 1;
+//    }
+//
+//    //      ret = glfs_set_volfile (fs2, "/tmp/posix.vol");
+//
+//    ret = glfs_set_volfile_server(fs2, "tcp", argv[2], 24007);
+//
+//    ret = glfs_set_logging(fs2, "/dev/stderr", 7);
+//
+//    ret = glfs_init(fs2);
+//
+//    fprintf(stderr, "glfs_init: returned %d\n", ret);
+//
+//    ret = glfs_lstat(fs, filename, &sb);
+//    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
+//
+//    fd = glfs_creat(fs, filename, O_RDWR, 0644);
+//    fprintf(stderr, "%s: (%p) %s\n", filename, fd, strerror(errno));
+//
+//    fd2 = glfs_open(fs2, filename, O_RDWR);
+//    fprintf(stderr, "%s: (%p) %s\n", filename, fd, strerror(errno));
+//
+//    sprintf(writebuf, "hi there\n");
+//    ret = glfs_write(fd, writebuf, 32, 0);
+//
+//    glfs_lseek(fd2, 0, SEEK_SET);
+//
+//    ret = glfs_read(fd2, readbuf, 32, 0);
+//
+//    printf("read %d, %s", ret, readbuf);
+//
+//    glfs_close(fd);
+//    glfs_close(fd2);
+//
+//    filename = "/filename3";
+//    ret = glfs_mknod(fs, filename, S_IFIFO, 0);
+//    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
+//
+//    ret = glfs_lstat(fs, filename, &sb);
+//    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
+//
+//    ret = glfs_rename(fs, filename, "/filename4");
+//    fprintf(stderr, "rename(%s): (%d) %s\n", filename, ret, strerror(errno));
+//
+//    ret = glfs_unlink(fs, "/filename4");
+//    fprintf(stderr, "unlink(%s): (%d) %s\n", "/filename4", ret,
+//            strerror(errno));
+//
+//    filename = "/dirname2";
+//    ret = glfs_mkdir(fs, filename, 0);
+//    fprintf(stderr, "%s: (%d) %s\n", filename, ret, strerror(errno));
+//
+//    ret = glfs_lstat(fs, filename, &sb);
+//    fprintf(stderr, "lstat(%s): (%d) %s\n", filename, ret, strerror(errno));
+//
+//    ret = glfs_rmdir(fs, filename);
+//    fprintf(stderr, "rmdir(%s): (%d) %s\n", filename, ret, strerror(errno));
+//
+//    test_dirops(fs);
+//
+//    test_xattr(fs);
+//
+//    test_chdir(fs);
+//
+//    test_handleops(argc, argv);
+//    // done
+//
+//    glfs_fini(fs);
+//    glfs_fini(fs2);
 
     return ret;
 }

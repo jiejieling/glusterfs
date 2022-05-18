@@ -4,7 +4,7 @@ from __future__ import print_function
 import ctypes
 import ctypes.util
 
-api = ctypes.CDLL("libgfapi.so")
+api = ctypes.CDLL("../src/.libs/libgfapi.dylib")
 api.glfs_get_volfile.argtypes = [ctypes.c_void_p,
                                  ctypes.c_void_p,
                                  ctypes.c_ulong]
@@ -30,16 +30,6 @@ def get_volfile(host, volume):
         return vlen
     return vbuf.value[:vlen]
 
+
 if __name__ == "__main__":
-    import sys
-
-    try:
-        res = get_volfile(*sys.argv[1:3])
-    except:
-        print("fetching volfile failed (volume not started?)")
-
-    try:
-        for line in res.split('\n'):
-            print(line)
-    except:
-        print("bad return value %s" % res)
+    print(get_volfile('192.168.15.103', 'test4'))

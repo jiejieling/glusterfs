@@ -6,9 +6,7 @@ dnl  General Public License, version 3 or any later version (LGPLv3 or
 dnl  later), or the GNU General Public License, version 2 (GPLv2), in all
 dnl  cases as published by the Free Software Foundation.
 
-AC_INIT([glusterfs],
-        [m4_esyscmd([build-aux/pkg-version --version])],
-        [gluster-users@gluster.org],,[https://github.com/gluster/glusterfs.git])
+AC_INIT([glusterfs],[m4_esyscmd([build-aux/pkg-version --version])],[gluster-users@gluster.org],[],[https://github.com/gluster/glusterfs.git])
 
 AC_SUBST([PACKAGE_RELEASE],
          [m4_esyscmd([build-aux/pkg-version --release])])
@@ -259,7 +257,7 @@ AC_CANONICAL_HOST
 
 AC_PROG_CC
 AC_DISABLE_STATIC
-AC_PROG_LIBTOOL
+LT_INIT
 AC_SUBST([shrext_cmds])
 
 AC_CHECK_PROG([RPCGEN], [rpcgen], [yes], [no])
@@ -270,8 +268,7 @@ fi
 
 # Initialize CFLAGS before usage
 AC_ARG_ENABLE([debug],
-              AC_HELP_STRING([--enable-debug],
-                             [Enable debug build options.]))
+              AS_HELP_STRING([--enable-debug],[Enable debug build options.]))
 if test "x$enable_debug" = "xyes"; then
         BUILD_DEBUG=yes
         GF_CFLAGS="${GF_CFLAGS} -g -rdynamic -O0 -DDEBUG"
@@ -280,8 +277,7 @@ else
 fi
 
 AC_ARG_ENABLE([asan],
-              AC_HELP_STRING([--enable-asan],
-                             [Enable Address Sanitizer support]))
+              AS_HELP_STRING([--enable-asan],[Enable Address Sanitizer support]))
 if test "x$enable_asan" = "xyes"; then
         BUILD_ASAN=yes
         AC_CHECK_LIB([asan], [__asan_report_error], ,
@@ -294,8 +290,7 @@ else
 fi
 
 AC_ARG_ENABLE([atan],
-              AC_HELP_STRING([--enable-tsan],
-                             [Enable ThreadSanitizer support]))
+              AS_HELP_STRING([--enable-tsan],[Enable ThreadSanitizer support]))
 if test "x$enable_tsan" = "xyes"; then
         BUILD_TSAN=yes
         AC_CHECK_LIB([tsan], [__tsan_init], ,
@@ -319,7 +314,7 @@ dnl on old linux with glibc rpc and WITHOUT libtirpc, default to
 dnl use glibc rpc.
 dnl
 AC_ARG_WITH([libtirpc],
-        [AC_HELP_STRING([--without-libtirpc], [Use legacy glibc RPC.])],
+        [AS_HELP_STRING([--without-libtirpc],[Use legacy glibc RPC.])],
         [with_libtirpc="no"], [with_libtirpc="yes"])
 
 dnl ipv6-default is off by default
@@ -328,7 +323,7 @@ dnl ipv6-default requires libtirpc. (glibc rpc does not support IPv6.)
 dnl ipv6-default can only be enabled if libtipc is enabled.
 dnl
 AC_ARG_WITH([ipv6-default],
-        AC_HELP_STRING([--with-ipv6-default], [Set IPv6 as default.]),
+        AS_HELP_STRING([--with-ipv6-default],[Set IPv6 as default.]),
         [with_ipv6_default=${with_libtirpc}], [with_ipv6_default="no"])
 
 AC_CHECK_FILE([/etc/centos-release])
@@ -343,8 +338,7 @@ AC_CHECK_LIB([dl], [dlopen], [LIB_DL=-ldl])
 AC_SUBST(LIB_DL)
 
 AC_ARG_ENABLE([privport_tracking],
-              AC_HELP_STRING([--disable-privport_tracking],
-                             [Disable internal tracking of privileged ports.]))
+              AS_HELP_STRING([--disable-privport_tracking],[Disable internal tracking of privileged ports.]))
 TRACK_PRIVPORTS="yes"
 if test x"$enable_privport_tracking" = x"no"; then
         TRACK_PRIVPORTS="no"
@@ -354,9 +348,6 @@ fi
 
 case $host_os in
   darwin*)
-    if ! test "`/usr/bin/sw_vers | grep ProductVersion: | cut -f 2 | cut -d. -f2`" -ge 7; then
-       AC_MSG_ERROR([You need at least OS X 10.7 (Lion) to build Glusterfs])
-    fi
     # OSX version lesser than 9 has llvm/clang optimization issues which leads to various segfaults
     if test "`/usr/bin/sw_vers | grep ProductVersion: | cut -f 2 | cut -d. -f2`" -lt 9; then
        GF_CFLAGS="${GF_CFLAGS} -g -O0 -DDEBUG"
@@ -366,8 +357,7 @@ esac
 
 # --enable-valgrind prevents calling dlclose(), this leaks memory
 AC_ARG_ENABLE([valgrind],
-              AC_HELP_STRING([--enable-valgrind],
-                             [Enable valgrind for resource leak debugging.]))
+              AS_HELP_STRING([--enable-valgrind],[Enable valgrind for resource leak debugging.]))
 if test "x$enable_valgrind" = "xyes"; then
         AC_DEFINE(RUN_WITH_VALGRIND, 1, [define if all processes should run under valgrind])
 fi
@@ -419,8 +409,7 @@ AC_ARG_WITH(launchddir,
 AC_SUBST(launchddir)
 
 AC_ARG_WITH(tmpfilesdir,
-            AC_HELP_STRING([--with-tmpfilesdir=DIR],
-                           [tmpfiles config in DIR, disabled by default]),
+            AS_HELP_STRING([--with-tmpfilesdir=DIR],[tmpfiles config in DIR, disabled by default]),
             [tmpfilesdir=$withval],
             [tmpfilesdir=''])
 AC_SUBST(tmpfilesdir)
@@ -662,8 +651,7 @@ AC_SUBST(BUILD_PYTHON_SITE_PACKAGES_EXPANDED)
 
 # FUSE section
 AC_ARG_ENABLE([fuse-client],
-              AC_HELP_STRING([--disable-fuse-client],
-                             [Do not build the fuse client. NOTE: you cannot mount glusterfs without the client]))
+              AS_HELP_STRING([--disable-fuse-client],[Do not build the fuse client. NOTE: you cannot mount glusterfs without the client]))
 
 BUILD_FUSE_CLIENT=no
 if test "x$enable_fuse_client" != "xno"; then
@@ -685,8 +673,7 @@ fi
 
 # FUSERMOUNT section
 AC_ARG_ENABLE([fusermount],
-              AC_HELP_STRING([--disable-fusermount],
-                             [Use system's fusermount]))
+              AS_HELP_STRING([--disable-fusermount],[Use system's fusermount]))
 
 BUILD_FUSERMOUNT="yes"
 if test "x$enable_fusermount" = "xno"; then
@@ -701,8 +688,7 @@ AC_SUBST(FUSERMOUNT_SUBDIR)
 
 # EPOLL section
 AC_ARG_ENABLE([epoll],
-              AC_HELP_STRING([--disable-epoll],
-                             [Use poll instead of epoll.]))
+              AS_HELP_STRING([--disable-epoll],[Use poll instead of epoll.]))
 
 BUILD_EPOLL=no
 if test "x$enable_epoll" != "xno"; then
@@ -715,8 +701,7 @@ fi
 
 # IBVERBS section
 AC_ARG_ENABLE([ibverbs],
-              AC_HELP_STRING([--disable-ibverbs],
-                             [Do not build the ibverbs transport]))
+              AS_HELP_STRING([--disable-ibverbs],[Do not build the ibverbs transport]))
 
 if test "x$enable_ibverbs" != "xno"; then
   AC_CHECK_LIB([ibverbs],
@@ -728,7 +713,7 @@ if test "x$enable_ibverbs" != "xno"; then
     AC_CHECK_DECLS(
                   [RDMA_OPTION_ID_REUSEADDR],
                   [],
-                  [AC_ERROR([Need at least version 1.0.15 of librdmacm])],
+                  [AC_MSG_ERROR(Need at least version 1.0.15 of librdmacm)],
                   [[#include <rdma/rdma_cma.h>]])
   fi
 fi
@@ -761,8 +746,7 @@ AC_SUBST(RDMA_SUBDIR)
 
 # SYNCDAEMON section
 AC_ARG_ENABLE([georeplication],
-              AC_HELP_STRING([--disable-georeplication],
-                             [Do not install georeplication components]))
+              AS_HELP_STRING([--disable-georeplication],[Do not install georeplication components]))
 
 BUILD_SYNCDAEMON=no
 case $host_os in
@@ -807,8 +791,7 @@ AM_CONDITIONAL(USE_GEOREP, test "x$enable_georeplication" != "xno")
 
 # Events section
 AC_ARG_ENABLE([events],
-              AC_HELP_STRING([--disable-events],
-                             [Do not install Events components]))
+              AS_HELP_STRING([--disable-events],[Do not install Events components]))
 
 BUILD_EVENTS=no
 EVENTS_ENABLED=0
@@ -855,8 +838,7 @@ AC_SUBST(ZLIB_LIBS)
 #start firewalld section
 BUILD_FIREWALLD="no"
 AC_ARG_ENABLE([firewalld],
-              AC_HELP_STRING([--enable-firewalld],
-                             [enable installation configuration for firewalld]),
+              AS_HELP_STRING([--enable-firewalld],[enable installation configuration for firewalld]),
               [BUILD_FIREWALLD="${enableval}"], [BUILD_FIREWALLD="no"])
 
 if test "x${with_server}" = "xyes" -a "x${BUILD_FIREWALLD}" = "xyes"; then
@@ -870,8 +852,7 @@ AM_CONDITIONAL([USE_FIREWALLD],test ["x${BUILD_FIREWALLD}" =  "xyes"])
 
 # xml-output
 AC_ARG_ENABLE([xml-output],
-              AC_HELP_STRING([--disable-xml-output],
-                             [Disable the xml output]))
+              AS_HELP_STRING([--disable-xml-output],[Disable the xml output]))
 BUILD_XML_OUTPUT="yes"
 if test "x$enable_xml_output" != "xno"; then
     PKG_CHECK_MODULES([XML], [libxml-2.0], [], [no_xml="yes"])
@@ -915,8 +896,7 @@ dnl SELinux feature enablement
 case $host_os in
   linux*)
     AC_ARG_ENABLE([selinux],
-                  AC_HELP_STRING([--disable-selinux],
-                                 [Disable SELinux features]),
+                  AS_HELP_STRING([--disable-selinux],[Disable SELinux features]),
                   [USE_SELINUX="${enableval}"], [USE_SELINUX="yes"])
     ;;
   *)
@@ -933,9 +913,7 @@ fi
 AC_SUBST(HAVE_BACKTRACE)
 
 if test "x${have_backtrace}" != "xyes"; then
-AC_TRY_COMPILE([#include <math.h>], [double x=0.0; x=ceil(0.0);],
-   [],
-   AC_MSG_ERROR([need math library for libexecinfo]))
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <math.h>]], [[double x=0.0; x=ceil(0.0);]])],[],[AC_MSG_ERROR(need math library for libexecinfo)])
 fi
 
 dnl glusterfs prints memory usage to stderr by sending it SIGUSR1
@@ -980,8 +958,7 @@ AC_SUBST(ARGP_LDADD)
 
 dnl Check for atomic operation support
 AC_MSG_CHECKING([for gcc __atomic builtins])
-AC_TRY_LINK([], [int v; __atomic_load_n(&v, __ATOMIC_ACQUIRE);],
-            [have_atomic_builtins=yes], [have_atomic_builtins=no])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[int v; __atomic_load_n(&v, __ATOMIC_ACQUIRE);]])],[have_atomic_builtins=yes],[have_atomic_builtins=no])
 if test "x${have_atomic_builtins}" = "xyes"; then
    AC_DEFINE(HAVE_ATOMIC_BUILTINS, 1, [define if __atomic_*() builtins are available])
 fi
@@ -990,8 +967,7 @@ AC_MSG_RESULT([$have_atomic_builtins])
 
 dnl __sync_*() will not be needed if __atomic_*() is available
 AC_MSG_CHECKING([for gcc __sync builtins])
-AC_TRY_LINK([], [__sync_synchronize();],
-            [have_sync_builtins=yes], [have_sync_builtins=no])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[__sync_synchronize();]])],[have_sync_builtins=yes],[have_sync_builtins=no])
 if test "x${have_sync_builtins}" = "xyes"; then
    AC_DEFINE(HAVE_SYNC_BUILTINS, 1, [define if __sync_*() builtins are available])
 fi
@@ -1250,17 +1226,16 @@ case $host_os in
      darwin*)
         GF_HOST_OS="GF_DARWIN_HOST_OS"
         LIBTOOL=glibtool
-        GF_CFLAGS="${GF_CFLAGS} -D_REENTRANT -D_XOPEN_SOURCE "
+        GF_CFLAGS="${GF_CFLAGS} -D_REENTRANT -D_XOPEN_SOURCE -DRELAX_POISONING -D_DARWIN_C_SOURCE -Doff64_t=off_t"
         GF_CFLAGS="${GF_CFLAGS} -D_DARWIN_USE_64_BIT_INODE "
-        GF_CFLAGS="${GF_CFLAGS} -DTHREAD_UNSAFE_BASENAME"
-        GF_CFLAGS="${GF_CFLAGS} -DTHREAD_UNSAFE_DIRNAME"
+        GF_CFLAGS="${GF_CFLAGS} -DGF_XATTR_NAME_MAX=1024"
         GF_LDADD="${ARGP_LDADD}"
         GF_LDFLAGS="${GF_LDFLAGS}"
         GF_FUSE_CFLAGS="-I\$(CONTRIBDIR)/macfuse"
         BUILD_FUSERMOUNT="no"
         FUSERMOUNT_SUBDIR=""
         GLUSTERD_WORKDIR="${LOCALSTATEDIR}/db/glusterd"
-        GFAPI_EXTRA_LDFLAGS='-Wl,-alias_list,$(top_srcdir)/api/src/gfapi.aliases'
+        GFAPI_EXTRA_LDFLAGS='-Wl,-alias_list,$(top_srcdir)/api/src/gfapi.aliases -Wl,-alias_list,$(top_srcdir)/api/src/gfapi-for-py.aliases'
         ;;
 esac
 
@@ -1295,12 +1270,10 @@ AC_SUBST(UMOUNTD_SUBDIR)
 
 # enable debug section
 AC_ARG_ENABLE([debug],
-              AC_HELP_STRING([--enable-debug],
-                             [Enable debug build options.]))
+              AS_HELP_STRING([--enable-debug],[Enable debug build options.]))
 
 AC_ARG_ENABLE([mempool],
-              AC_HELP_STRING([--disable-mempool],
-                             [Disable the Gluster memory pooler.]))
+              AS_HELP_STRING([--disable-mempool],[Disable the Gluster memory pooler.]))
 
 USE_MEMPOOL="yes"
 if test "x$enable_mempool" = "xno"; then
@@ -1310,8 +1283,7 @@ fi
 
 # syslog section
 AC_ARG_ENABLE([syslog],
-              AC_HELP_STRING([--disable-syslog],
-                             [Disable syslog for logging]))
+              AS_HELP_STRING([--disable-syslog],[Disable syslog for logging]))
 
 USE_SYSLOG="yes"
 if test "x$enable_syslog" != "xno"; then
@@ -1348,8 +1320,7 @@ fi
 dnl gnfs section
 BUILD_GNFS="no"
 AC_ARG_ENABLE([gnfs],
-              AC_HELP_STRING([--enable-gnfs],
-                             [Enable legacy gnfs server xlator.]))
+              AS_HELP_STRING([--enable-gnfs],[Enable legacy gnfs server xlator.]))
 if test "x${with_server}" = "xyes" -a "x$enable_gnfs" = "xyes"; then
     BUILD_GNFS="yes"
 fi
@@ -1372,8 +1343,7 @@ PKG_CHECK_MODULES([URCU_CDS], [liburcu-cds >= 0.8], [],
 
 BUILD_UNITTEST="no"
 AC_ARG_ENABLE([cmocka],
-              AC_HELP_STRING([--enable-cmocka],
-                             [Enable cmocka build options.]))
+              AS_HELP_STRING([--enable-cmocka],[Enable cmocka build options.]))
 if test "x$enable_cmocka" = "xyes"; then
     BUILD_UNITTEST="yes"
     PKG_CHECK_MODULES([UNITTEST], [cmocka >= 1.0.1], [BUILD_UNITTEST="yes"],
@@ -1410,32 +1380,25 @@ EC_DYNAMIC_SUPPORT="none"
 EC_DYNAMIC_ARCH="none"
 
 AC_ARG_ENABLE([ec-dynamic],
-              AC_HELP_STRING([--disable-ec-dynamic],
-                             [Disable all dynamic code generation extensions for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic],[Disable all dynamic code generation extensions for EC module]))
 
 AC_ARG_ENABLE([ec-dynamic-intel],
-              AC_HELP_STRING([--disable-ec-dynamic-intel],
-                             [Disable all INTEL dynamic code generation extensions for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic-intel],[Disable all INTEL dynamic code generation extensions for EC module]))
 
 AC_ARG_ENABLE([ec-dynamic-arm],
-              AC_HELP_STRING([--disable-ec-dynamic-arm],
-                             [Disable all ARM dynamic code generation extensions for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic-arm],[Disable all ARM dynamic code generation extensions for EC module]))
 
 AC_ARG_ENABLE([ec-dynamic-x64],
-              AC_HELP_STRING([--disable-ec-dynamic-x64],
-                             [Disable dynamic INTEL x64 code generation for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic-x64],[Disable dynamic INTEL x64 code generation for EC module]))
 
 AC_ARG_ENABLE([ec-dynamic-sse],
-              AC_HELP_STRING([--disable-ec-dynamic-sse],
-                             [Disable dynamic INTEL SSE code generation for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic-sse],[Disable dynamic INTEL SSE code generation for EC module]))
 
 AC_ARG_ENABLE([ec-dynamic-avx],
-              AC_HELP_STRING([--disable-ec-dynamic-avx],
-                             [Disable dynamic INTEL AVX code generation for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic-avx],[Disable dynamic INTEL AVX code generation for EC module]))
 
 AC_ARG_ENABLE([ec-dynamic-neon],
-              AC_HELP_STRING([--disable-ec-dynamic-neon],
-                             [Disable dynamic ARM NEON code generation for EC module]))
+              AS_HELP_STRING([--disable-ec-dynamic-neon],[Disable dynamic ARM NEON code generation for EC module]))
 
 if test "x$enable_ec_dynamic" != "xno"; then
   case $host in
@@ -1500,7 +1463,7 @@ case $host_os in
     GF_NO_UNDEFINED='-Wl,--no-undefined'
     ;;
   darwin*)
-    GF_NO_UNDEFINED='-Wl,-undefined'
+    GF_NO_UNDEFINED='-Wl,-undefined,dynamic_lookup'
     ;;
   *)
   dnl There's an issue on FreeBSD with reference to __progname used in some parts of code

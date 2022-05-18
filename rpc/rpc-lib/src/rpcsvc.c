@@ -2292,11 +2292,15 @@ rpcsvc_program_register(rpcsvc_t *svc, rpcsvc_program_t *program,
 
     INIT_LIST_HEAD(&newprog->program);
     pthread_mutexattr_init(&thr_attr);
+#ifdef PTHREAD_MUTEX_ADAPTIVE_NP
     pthread_mutexattr_settype(&thr_attr, PTHREAD_MUTEX_ADAPTIVE_NP);
+#endif
 
     for (i = 0; i < EVENT_MAX_THREADS; i++) {
         pthread_mutexattr_init(&attr[i]);
+#ifdef PTHREAD_MUTEX_ADAPTIVE_NP
         pthread_mutexattr_settype(&attr[i], PTHREAD_MUTEX_ADAPTIVE_NP);
+#endif
         INIT_LIST_HEAD(&newprog->request_queue[i].request_queue);
         pthread_mutex_init(&newprog->request_queue[i].queue_lock, &attr[i]);
         pthread_cond_init(&newprog->request_queue[i].queue_cond, NULL);
