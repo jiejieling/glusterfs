@@ -14,12 +14,12 @@
 #include <pthread.h>
 
 #if defined(GF_DARWIN_HOST_OS)
-#include <libkern/OSAtomic.h>
-#define pthread_spinlock_t OSSpinLock
-#define pthread_spin_lock(l) OSSpinLockLock(l)
-#define pthread_spin_unlock(l) OSSpinLockUnlock(l)
+#include <os/lock.h>
+#define pthread_spinlock_t os_unfair_lock
+#define pthread_spin_lock(l) os_unfair_lock_lock(l)
+#define pthread_spin_unlock(l) os_unfair_lock_unlock(l)
 #define pthread_spin_destroy(l) 0
-#define pthread_spin_init(l, v) (*l = v)
+#define pthread_spin_init(l, v) (*l._os_unfair_lock_opaque = 0)
 #endif
 
 #if defined(HAVE_SPINLOCK)
