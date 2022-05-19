@@ -67,6 +67,10 @@
 #include "glusterfs/mem-types.h"
 #include "glusterfs/async.h"
 
+#ifdef GF_DARWIN_HOST_OS
+#include "pthread_barrier.h"
+#endif
+
 /* These macros wrap a simple system/library call to check the returned error
  * and log a message in case of failure. */
 #define GF_ASYNC_CHECK(_func, _args...)                                        \
@@ -189,6 +193,45 @@ gf_async_sigwait(sigset_t *set)
 
     return signum;
 }
+
+#ifdef GF_DARWIN_HOST_OS
+int
+sigtimedwait(const sigset_t *set, siginfo_t *info,
+             const struct timespec *timeout)
+{
+    struct timespec elapsed = {0, 0}, rem;
+    sigset_t pending;
+    int signo;
+    long ns;
+
+    do {
+        sigpending(&pending); /* doesn't clear pending queue */
+
+        for (signo = 1; signo < NSIG; signo++) {
+            if (sigismember(set, signo) && sigismember(&pending, signo)) {
+                if (info) {
+                    memset(info, 0, sizeof *info);
+                    info->si_signo = signo;
+                }
+
+                return signo;
+            }
+        }
+
+        ns = 200000000L; /* 2/10th second */
+        nanosleep(&(struct timespec){0, ns}, &rem);
+        ns -= rem.tv_nsec;
+        elapsed.tv_sec += (elapsed.tv_nsec + ns) / 1000000000L;
+        elapsed.tv_nsec = (elapsed.tv_nsec + ns) % 1000000000L;
+    } while (elapsed.tv_sec < timeout->tv_sec ||
+             (elapsed.tv_sec == timeout->tv_sec &&
+              elapsed.tv_nsec < timeout->tv_nsec));
+
+    errno = EAGAIN;
+
+    return -1;
+}
+#endif
 
 static int32_t
 gf_async_sigtimedwait(sigset_t *set, struct timespec *timeout)

@@ -204,7 +204,7 @@ gf_timer_registry_init(glusterfs_ctx_t *ctx)
         ctx->timer = reg;
         pthread_mutex_init(&reg->lock, NULL);
         pthread_condattr_init(&attr);
-#ifdef CLOCK_MONOTONIC
+#ifndef GF_DARWIN_HOST_OS
         pthread_condattr_setclock(&attr, CLOCK_MONOTONIC);
 #endif
         pthread_cond_init(&reg->cond, &attr);

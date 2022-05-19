@@ -20,22 +20,12 @@ _pub_glfs_read _glfs_read
 _pub_glfs_write _glfs_write
 _pub_glfs_readv _glfs_readv
 _pub_glfs_writev _glfs_writev
-_pub_glfs_pread34 _glfs_pread
-_pub_glfs_pwrite34 _glfs_pwrite
-_pub_glfs_pread_async34 _glfs_pread_async
-_pub_glfs_pwrite_async34 _glfs_pwrite_async
 _pub_glfs_preadv _glfs_preadv
 _pub_glfs_pwritev _glfs_pwritev
 _pub_glfs_lseek _glfs_lseek
-_pub_glfs_ftruncate34 _glfs_ftruncate
-_pub_glfs_ftruncate_async34 _glfs_ftruncate_async
 _pub_glfs_lstat _glfs_lstat
 _pub_glfs_stat _glfs_stat
 _pub_glfs_fstat _glfs_fstat
-_pub_glfs_fsync34 _glfs_fsync
-_pub_glfs_fsync_async34 _glfs_fsync_async
-_pub_glfs_fdatasync34 _glfs_fdatasync
-_pub_glfs_fdatasync_async34 _glfs_fdatasync_async
 _pub_glfs_access _glfs_access
 _pub_glfs_symlink _glfs_symlink
 _pub_glfs_readlink _glfs_readlink
@@ -75,14 +65,12 @@ _pub_glfs_fremovexattr _glfs_fremovexattr
 _pub_glfs_getcwd _glfs_getcwd
 _pub_glfs_chdir _glfs_chdir
 _pub_glfs_fchdir _glfs_fchdir
-_pub_glfs_realpath34 _glfs_realpath
 _pub_glfs_posix_lock _glfs_posix_lock
 _pub_glfs_dup _glfs_dup
 
 _pub_glfs_setfsuid _glfs_setfsuid
 _pub_glfs_setfsgid _glfs_setfsgid
 _pub_glfs_setfsgroups _glfs_setfsgroups
-_pub_glfs_h_lookupat34 _glfs_h_lookupat
 _pub_glfs_h_creat _glfs_h_creat
 _pub_glfs_h_mkdir _glfs_h_mkdir
 _pub_glfs_h_mknod _glfs_h_mknod
@@ -117,7 +105,6 @@ _pub_glfs_h_removexattrs _glfs_h_removexattrs
 _pub_glfs_get_volfile _glfs_get_volfile
 _pub_glfs_h_access _glfs_h_access
 
-_pub_glfs_h_poll_upcall370 _glfs_h_poll_upcall
 _pub_glfs_h_acl_set _glfs_h_acl_set
 _pub_glfs_h_acl_get _glfs_h_acl_get
 _pub_glfs_h_statfs _glfs_h_statfs

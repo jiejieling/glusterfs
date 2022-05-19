@@ -743,7 +743,8 @@ static gf_boolean_t
 skip_logging(xlator_t *this, gf_loglevel_t level)
 {
     gf_loglevel_t existing_level = this->loglevel ? this->loglevel
-                                                  : this->ctx->log.loglevel;
+                                                    : gf_log_get_loglevel();
+//                                                  : this->ctx->log.loglevel;
     if (level > existing_level) {
         return _gf_true;
     }

@@ -69,7 +69,7 @@
  */
 #ifndef GF_BSD_HOST_OS
 #if defined(__USE_FILE_OFFSET64) && !defined(__off64_t_defined)
-typedef __off64_t off64_t;
+typedef __int64_t off64_t;
 #endif /* defined(__USE_FILE_OFFSET64) && !defined(__off64_t_defined) */
 #else
 #include <stdio.h>

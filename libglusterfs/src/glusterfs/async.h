@@ -39,6 +39,9 @@
 #include "glusterfs/list.h"
 #include "glusterfs/libglusterfs-messages.h"
 
+#ifdef GF_DARWIN_HOST_OS
+#include "pthread_barrier.h"
+#endif
 /* This is the name prefix that all worker threads will have. A number will
  * be added to differentiate them. */
 #define GF_ASYNC_THREAD_NAME "tpw"

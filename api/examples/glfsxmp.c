@@ -22,8 +22,8 @@ test_dirops(glfs_t *fs)
     }
 
     fprintf(stderr, "Entries:\n");
-    while (glfs_readdir_r(fd, (struct dirent *)buf, &entry), entry) {
-        fprintf(stderr, "%s: %lu\n", entry->d_name, glfs_telldir(fd));
+    while (glfs_readdir_r(fd, (struct dirent *)buf, &entry), &entry) {
+        fprintf(stderr, "Name: %s, Inode: %d\n", entry->d_name, entry->d_ino);
     }
 
     glfs_closedir(fd);
@@ -484,8 +484,8 @@ test_h_getsetattrs(void)
         printf("glfs_h_getattrs and setattrs tests: FAILED\n");
         goto out;
     }
-    retsb.st_atim = timestamp;
-    retsb.st_mtim = timestamp;
+//    retsb.st_atim = timestamp;
+//    retsb.st_mtim = timestamp;
     valid = GFAPI_SET_ATTR_MODE | GFAPI_SET_ATTR_UID | GFAPI_SET_ATTR_GID |
             GFAPI_SET_ATTR_ATIME | GFAPI_SET_ATTR_MTIME;
     peek_stat(&retsb);
@@ -1726,21 +1726,21 @@ test_metadata_ops(glfs_t *fs, glfs_t *fs2)
 int
 main(int argc, char *argv[])
 {
-    glfs_t *fs2 = NULL;
+//    glfs_t *fs2 = NULL;
     int ret = 0;
-    glfs_fd_t *fd = NULL;
-    glfs_fd_t *fd2 = NULL;
-    struct stat sb = {
-        0,
-    };
-    struct glfs_stat gsb = {
-        0,
-    };
-    struct statvfs sfs;
-    char readbuf[32];
-    char writebuf[32];
-
-    char *filename = "/filename2";
+//    glfs_fd_t *fd = NULL;
+//    glfs_fd_t *fd2 = NULL;
+//    struct stat sb = {
+//        0,
+//    };
+//    struct glfs_stat gsb = {
+//        0,
+//    };
+//    struct statvfs sfs;
+//    char readbuf[32];
+//    char writebuf[32];
+//
+//    char *filename = "/filename2";
 
     if (argc != 3) {
         printf("Expect following args\n\t%s <volname> <hostname>\n", argv[0]);
@@ -1769,41 +1769,41 @@ main(int argc, char *argv[])
         goto out;
 
     sleep(2);
-
-    fs2 = glfs_new(argv[1]);
-    if (!fs2) {
-        fprintf(stderr, "glfs_new: returned NULL\n");
-        return 1;
-    }
-
-    //      ret = glfs_set_volfile (fs2, "/tmp/posix.vol");
-
-    ret = glfs_set_volfile_server(fs2, "tcp", argv[2], 24007);
-
-    ret = glfs_set_logging(fs2, "/dev/stderr", 7);
-
-    ret = glfs_init(fs2);
-
-    fprintf(stderr, "glfs_init: returned %d\n", ret);
-
-    test_metadata_ops(fs, fs2);
+//
+//    fs2 = glfs_new(argv[1]);
+//    if (!fs2) {
+//        fprintf(stderr, "glfs_new: returned NULL\n");
+//        return 1;
+//    }
+//
+//    //      ret = glfs_set_volfile (fs2, "/tmp/posix.vol");
+//
+//    ret = glfs_set_volfile_server(fs2, "tcp", argv[2], 24007);
+//
+//    ret = glfs_set_logging(fs2, "/dev/stderr", 7);
+//
+//    ret = glfs_init(fs2);
+//
+//    fprintf(stderr, "glfs_init: returned %d\n", ret);
+//
+//    test_metadata_ops(fs, fs2);
+//
+//    test_dirops(fs);
+//
+//    test_xattr(fs);
 
     test_dirops(fs);
 
-    test_xattr(fs);
-
-    test_chdir(fs);
-
-    test_handleops(argc, argv);
-    // done
-
-    /* Test some extra apis */
-    test_write_apis(fs);
-
-    glfs_statvfs(fs, "/", &sfs);
+//    test_handleops(argc, argv);
+//    // done
+//
+//    /* Test some extra apis */
+//    test_write_apis(fs);
+//
+//    glfs_statvfs(fs, "/", &sfs);
 
     glfs_fini(fs);
-    glfs_fini(fs2);
+//    glfs_fini(fs2);
 
     ret = 0;
 out:

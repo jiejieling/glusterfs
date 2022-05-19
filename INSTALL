@@ -50,6 +50,6 @@ For more information on GlusterFS installation refer# http://docs.gluster.org/en
 INSTALL:
 1. autoupdate
 2. ./autogen.sh
-3. CPPFLAGS=-I/usr/local/Cellar/openssl\@1.1/1.1.1m/include/ LDFLAGS="-L/usr/local/lib -largp -L/usr/local/Cellar/openssl@1.1/1.1.1m/lib/" ./configure --without-server --disable-fuse-client --without-libtirpc
+3. CPPFLAGS=-I/usr/local/Cellar/openssl\@1.1/1.1.1m/include/ LDFLAGS="-L/usr/local/lib -largp -L/usr/local/Cellar/openssl@1.1/1.1.1m/lib/" ./configure --without-server --disable-fuse-client
 4. make
 5. make install

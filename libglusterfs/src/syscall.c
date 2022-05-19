@@ -113,8 +113,8 @@ sys_openat(int dirfd, const char *pathname, int flags, int mode)
     int fd;
 
 #ifdef GF_DARWIN_HOST_OS
-    if (fchdir(dirfd) < 0)
-        return -1;
+//    if (fchdir(dirfd) < 0)
+//        return -1;
     fd = open(pathname, flags, mode);
     /* TODO: Shouldn't we restore the old current directory */
 #else /* GF_DARWIN_HOST_OS */

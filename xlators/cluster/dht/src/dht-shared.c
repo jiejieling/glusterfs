@@ -1101,4 +1101,8 @@ struct volume_options dht_options[] = {
 #define NUM_DHT_OPTIONS (sizeof(dht_options) / sizeof(dht_options[0]))
 
 extern struct volume_options options[NUM_DHT_OPTIONS]
+#ifdef GF_DARWIN_HOST_OS
+    asm("dht_options");
+#else
     __attribute__((alias("dht_options")));
+#endif

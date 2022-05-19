@@ -19,6 +19,12 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <time.h>
+
+#ifdef GF_DARWIN_HOST_OS
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 #include <glusterfs/locking.h>
 #include "io-threads-messages.h"
 #include <glusterfs/timespec.h>
@@ -190,7 +196,17 @@ iot_worker(void *data)
                     break;
                 }
 
+#ifdef GF_DARWIN_HOST_OS
+                clock_serv_t cclock;
+                mach_timespec_t mts;
+                host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+                clock_get_time(cclock, &mts);
+                mach_port_deallocate(mach_task_self(), cclock);
+                sleep_till.tv_sec = mts.tv_sec;
+                sleep_till.tv_nsec = mts.tv_nsec;
+#else
                 clock_gettime(CLOCK_REALTIME_COARSE, &sleep_till);
+#endif
                 sleep_till.tv_sec += conf->idle_time;
 
                 conf->sleep_count++;
