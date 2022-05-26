@@ -1559,7 +1559,7 @@ main(int argc, char *argv[])
 
     fprintf(stderr, "glfs_init: returned %d\n", ret);
 //
-//    sleep(2);
+    sleep(100);
 //
 //    fs2 = glfs_new(argv[1]);
 //    if (!fs2) {
