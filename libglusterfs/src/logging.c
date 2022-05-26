@@ -2073,8 +2073,8 @@ _gf_msg(const char *domain, const char *file, const char *function,
 
     /* in args check */
     if (!domain || !file || !function || !fmt) {
-        fprintf(stderr, "logging: %s:%s():%d: invalid argument\n", __FILE__,
-                __PRETTY_FUNCTION__, __LINE__);
+//        fprintf(stderr, "logging: %s:%s():%d: invalid argument\n", __FILE__,
+//                __PRETTY_FUNCTION__, __LINE__);
         return -1;
     }
 
